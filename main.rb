@@ -151,7 +151,7 @@ class Player
     @x, @y = x, y
     
     # Load image
-    image = SDL::Surface.load("image/noschar.png")
+    image = SDL::Surface.loadBMP("image/noschar.bmp")
     image.set_color_key(SDL::SRCCOLORKEY|SDL::RLEACCEL, [255,255,255])
     # Extract four images from the top-most row
     @images = []
