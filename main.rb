@@ -7,7 +7,7 @@ require 'sdl'
 require 'lib/fpstimer.rb'
 require 'lib/input.rb'
 
-#ƒL[’è‹`
+#ã‚­ãƒ¼å®šç¾©
 class Input
   define_key SDL::Key::ESCAPE, :exit
   define_key SDL::Key::LEFT, :left
@@ -19,22 +19,22 @@ end
 class Game
 
   def main
-    # ‰Šú‰»
+    # åˆæœŸåŒ–
     SDL.init(SDL::INIT_VIDEO|SDL::INIT_AUDIO|SDL::INIT_JOYSTICK)
     SDL::Mixer.open
     SDL::TTF.init
 
-    # ‰æ–Ê‚Ì‰Šú‰»
+    # ç”»é¢ã®åˆæœŸåŒ–
     if defined?(SDL::RELEASE_MODE)
-      # game.exe‚©‚ç‹N“®‚µ‚½‚Æ‚«
+      # game.exeã‹ã‚‰èµ·å‹•ã—ãŸã¨ã
       SDL::Mouse.hide
       @screen = SDL.set_video_mode(640, 480, 16, SDL::HWSURFACE|SDL::DOUBLEBUF|SDL::FULLSCREEN)
     else
-      # debug.exe‚©‚ç‹N“®‚µ‚½‚Æ‚«
+      # debug.exeã‹ã‚‰èµ·å‹•ã—ãŸã¨ã
       @screen = SDL.set_video_mode(640, 480, 16, SDL::SWSURFACE|SDL::DOUBLEBUF)
     end
 
-    # ƒIƒuƒWƒFƒNƒg‚Ì¶¬
+    # ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç”Ÿæˆ
     $score = Score.new
 
     @input = Input.new
@@ -42,21 +42,21 @@ class Game
     @bgm = SDL::Mixer::Music.load("sound/famipop3.it")
     @player      = Player.new(240, 400-32)
     @items       = Items.new
-    @state = :title   #Å‰‚Íƒ^ƒCƒgƒ‹‚©‚ç
+    @state = :title   #æœ€åˆã¯ã‚¿ã‚¤ãƒˆãƒ«ã‹ã‚‰
 
-    # ƒƒCƒ“ƒ‹[ƒv
+    # ãƒ¡ã‚¤ãƒ³ãƒ«ãƒ¼ãƒ—
     timer = FPSTimerLight.new
     timer.reset
     loop do  
-      @input.poll             #“ü—Í
-      break if @input[:exit]  #  ESCAPE‰Ÿ‚³‚ê‚½‚çI—¹
+      @input.poll             #å…¥åŠ›
+      break if @input[:exit]  #  ESCAPEæŠ¼ã•ã‚ŒãŸã‚‰çµ‚äº†
 
-      act                     #“®ì
-      render                  #•`‰æ
-      timer.wait_frame{ @screen.flip } #‘Ò‚Â
+      act                     #å‹•ä½œ
+      render                  #æç”»
+      timer.wait_frame{ @screen.flip } #å¾…ã¤
     end
 
-    #I—¹
+    #çµ‚äº†
     $score.save
   end
 
@@ -73,7 +73,7 @@ class Game
     end
   end
 
-  # ƒ^ƒCƒgƒ‹ (ENTER‚ª‰Ÿ‚³‚ê‚½‚çREADY GO‚É)
+  # ã‚¿ã‚¤ãƒˆãƒ« (ENTERãŒæŠ¼ã•ã‚ŒãŸã‚‰READY GOã«)
   def act_title
     @player.act(@input)
     if @input.ok
@@ -82,7 +82,7 @@ class Game
     end
   end
 
-  # READY GO (ˆê’èŠÔŒo‚Á‚½‚çƒQ[ƒ€ŠJn)
+  # READY GO (ä¸€å®šæ™‚é–“çµŒã£ãŸã‚‰ã‚²ãƒ¼ãƒ é–‹å§‹)
   def act_readygo
     @time += 1
 
@@ -92,7 +92,7 @@ class Game
     end
   end
 
-  # ƒQ[ƒ€’† (”š’e‚É“–‚½‚Á‚½‚çGAME OVER‚É)
+  # ã‚²ãƒ¼ãƒ ä¸­ (çˆ†å¼¾ã«å½“ãŸã£ãŸã‚‰GAME OVERã«)
   def act_playing
     @player.act(@input)
     crash = @items.act(@player)
@@ -104,7 +104,7 @@ class Game
     end
   end
 
-  # GAME OVER (ˆê’èŠÔŒo‚Á‚½‚çƒ^ƒCƒgƒ‹‚É)
+  # GAME OVER (ä¸€å®šæ™‚é–“çµŒã£ãŸã‚‰ã‚¿ã‚¤ãƒˆãƒ«ã«)
   def act_gameover
     @time += 1
 
@@ -116,18 +116,18 @@ class Game
   end
 
   def render
-    #”wŒi‚Ì•`‰æ
+    #èƒŒæ™¯ã®æç”»
     @screen.fill_rect(0,0,  640,400, [128,255,255])
     @screen.fill_rect(0,400,640,180, [0,128,0])
 
-    #ƒLƒƒƒ‰ƒNƒ^[‚Ì•`‰æ
+    #ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®æç”»
     @player.render(@screen)
     @items.render(@screen)
 
-    #ƒXƒRƒA‚Ì•`‰æ
+    #ã‚¹ã‚³ã‚¢ã®æç”»
     @font.drawBlendedUTF8(@screen, "SCORE %05d  HIGH %05d" % [$score.score,$score.highscore], 0,0, 0,0,0) 
 
-    #ƒƒbƒZ[ƒW‚Ì•`‰æ
+    #ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®æç”»
     case @state
     when :title
       @font.drawBlendedUTF8(@screen,"THE APPLE CATCHER",0,210, 255,0,0)
@@ -150,25 +150,25 @@ class Player
   def initialize(x,y)
     @x, @y = x, y
     
-    #‰æ‘œ‚Ì“Ç‚İ‚İ
+    #ç”»åƒã®èª­ã¿è¾¼ã¿
     image = SDL::Surface.load("image/noschar.png")
     image.set_color_key(SDL::SRCCOLORKEY|SDL::RLEACCEL, [255,255,255])
-    #ˆê”Ôã‚Ì4ƒ}ƒX‚ğØ‚è‚¾‚µ‚Ä”z—ñ‚É“ü‚ê‚é
+    #ä¸€ç•ªä¸Šã®4ãƒã‚¹ã‚’åˆ‡ã‚Šã ã—ã¦é…åˆ—ã«å…¥ã‚Œã‚‹
     @images = []
     4.times do |x|
       @images << image.copy_rect(32*x,0,32,32).display_format
     end
 
-    #ƒAƒjƒ[ƒVƒ‡ƒ“—p‚ÌƒJƒEƒ“ƒ^
+    #ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç”¨ã®ã‚«ã‚¦ãƒ³ã‚¿
     @img_ct = 0
   end
   attr_reader :x, :y
 
   def act(input)
-    #ˆÚ“®
+    #ç§»å‹•
     move(-8) if input.left
     move(+8) if input.right
-    #ƒAƒjƒ[ƒVƒ‡ƒ“
+    #ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
     @img_ct += 1
     @img_ct = 0 if @img_ct >= 40
   end
@@ -185,18 +185,18 @@ class Player
 
 end
 
-#—‰º•¨
+#è½ä¸‹ç‰©
 class Items
   Item = Struct.new(:type,:x,:y,:v)
 
   def initialize
-    #‰æ‘œ‚Ìƒ[ƒh
+    #ç”»åƒã®ãƒ­ãƒ¼ãƒ‰
     @img_apple = SDL::Surface.loadBMP("image/ringo.bmp")
     @img_apple.set_color_key(SDL::SRCCOLORKEY, [255,255,255])
     @img_bomb = SDL::Surface.loadBMP("image/bomb.bmp")
     @img_bomb.set_color_key(SDL::SRCCOLORKEY, [255,255,255])
 
-    #‰¹º‚Ìƒ[ƒh
+    #éŸ³å£°ã®ãƒ­ãƒ¼ãƒ‰
     @sound_get  = SDL::Mixer::Wave.load("sound/get.wav")
     @sound_bomb = SDL::Mixer::Wave.load("sound/bom08.wav")
 
@@ -207,7 +207,7 @@ class Items
     @items = []
   end
 
-  #ƒŠƒ“ƒS‚Ì“–‚½‚è”»’è
+  #ãƒªãƒ³ã‚´ã®å½“ãŸã‚Šåˆ¤å®š
   def hit_apple?(apple, player)
     xdiff = (apple.x+38) - (player.x+16)
     ydiff = (apple.y+48) - (player.y+16)
@@ -216,7 +216,7 @@ class Items
     distance < (40+16)
   end
 
-  #”š’e‚Ì“–‚½‚è”»’è
+  #çˆ†å¼¾ã®å½“ãŸã‚Šåˆ¤å®š
   def hit_bomb?(bomb, player)
     xdiff = (bomb.x+36) - (player.x+16)
     ydiff = (bomb.y+54) - (player.y+16)
@@ -228,13 +228,13 @@ class Items
   def act(player)
     crash = false
 
-    #ˆÚ“®
+    #ç§»å‹•
     @items.each do |item|
       item.y += item.v
-      #item.x += item.v-8    #©‰B‚µƒ‚[ƒh
+      #item.x += item.v-8    #â†éš ã—ãƒ¢ãƒ¼ãƒ‰
     end
       
-    #“–‚½‚è”»’è
+    #å½“ãŸã‚Šåˆ¤å®š
     @items.each do |item|
       case item.type
       when :apple
@@ -251,24 +251,24 @@ class Items
       end
     end
 
-    #Á‹
+    #æ¶ˆå»
     @items.delete_if do |item|
       item.y > 480
     end
 
-    #¶¬
+    #ç”Ÿæˆ
     while @items.size < 5
       newx = rand(640) 
       type = (rand(100) < 80) ? :bomb : :apple
       @items << Item.new(type, newx, 0, rand(9)+4)
     end
 
-    #”š’e‚É“–‚½‚Á‚½‚©‚Ç‚¤‚©‚ğ•Ô‚·
+    #çˆ†å¼¾ã«å½“ãŸã£ãŸã‹ã©ã†ã‹ã‚’è¿”ã™
     crash
   end
 
   def render(screen)
-    #ƒAƒCƒeƒ€‚ğˆêŒÂ‚¸‚Â•`‰æ‚·‚é
+    #ã‚¢ã‚¤ãƒ†ãƒ ã‚’ä¸€å€‹ãšã¤æç”»ã™ã‚‹
     @items.each do |item|
       case item.type
       when :apple
@@ -284,7 +284,7 @@ class Score
   SCOREFILE = "score.dat"
 
   def initialize
-    #ƒnƒCƒXƒRƒA‚Ìƒ[ƒh(ƒtƒ@ƒCƒ‹‚ª‚ ‚ê‚Î)
+    #ãƒã‚¤ã‚¹ã‚³ã‚¢ã®ãƒ­ãƒ¼ãƒ‰(ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚Œã°)
     if File.exist?(SCOREFILE)
       @highscore = File.open(SCOREFILE,"rb"){|f| Marshal.load(f)}
     else
@@ -294,7 +294,7 @@ class Score
   end
   attr_reader :score, :highscore
 
-  #ƒXƒRƒA‚ÌƒŠƒZƒbƒg(‚ÆAƒnƒCƒXƒRƒA‚ÌXV)
+  #ã‚¹ã‚³ã‚¢ã®ãƒªã‚»ãƒƒãƒˆ(ã¨ã€ãƒã‚¤ã‚¹ã‚³ã‚¢ã®æ›´æ–°)
   def reset
     if @highscore < @score
       @highscore = @score
@@ -302,7 +302,7 @@ class Score
     @score = 0
   end
   
-  #ƒnƒCƒXƒRƒA‚ÌƒZ[ƒu
+  #ãƒã‚¤ã‚¹ã‚³ã‚¢ã®ã‚»ãƒ¼ãƒ–
   def save
     data = @highscore
     File.open(SCOREFILE,"wb"){|f| Marshal.dump(data,f)}
@@ -313,6 +313,6 @@ class Score
   end
 end
 
-#ÀsI
+#å®Ÿè¡Œï¼
 Game.new.main
 

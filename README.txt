@@ -1,67 +1,67 @@
-Ruby/SDL�X�^�[�^�[�L�b�g - ��������{�ŃQ�[��������J����
+Ruby/SDLスターターキット - メモ帳一本でゲームが作れる開発環境
 
-! �����
+! 動作環境
 
 Windows
 
-! �T���v���𓮂����Ă݂悤
+! サンプルを動かしてみよう
 
-game.exe���_�u���N���b�N����ƃT���v���Q�[���uthe apple catcher�v��
-�N�����܂��B���L�[�ŃL�����N�^�[�����E�ɓ������A��񂲂��W�߂Ă��������B
+game.exeをダブルクリックするとサンプルゲーム「the apple catcher」が
+起動します。矢印キーでキャラクターを左右に動かし、りんごを集めてください。
 
-debug.exe���_�u���N���b�N����ƃE�B���h�E���[�h�ŋN�����܂��B
+debug.exeをダブルクリックするとウィンドウモードで起動します。
 
-! �T���v�����������Ă݂悤
+! サンプルを改造してみよう
 
-main.rb�ɃQ�[���̃X�N���v�g�������Ă���܂��B
-main.rb���e�L�X�g�G�f�B�^�ŊJ���A�ҏW���Ă݂܂��傤�B
-�Ⴆ�΁A�^�񒆂�����ɂ���ȍs������܂��B
+main.rbにゲームのスクリプトが書いてあります。
+main.rbをテキストエディタで開き、編集してみましょう。
+例えば、真ん中あたりにこんな行があります。
 
-      #item.x += item.v-8    #���B�����[�h
+      #item.x += item.v-8    #←隠しモード
 
-���̍s�̐擪�́u#�v�������āA�t�@�C����ۑ����܂��傤�B
+この行の先頭の「#」を消して、ファイルを保存しましょう。
 
-������xgame.exe�����s����Ɓc�c�ǂ��Ȃ邩�́A�����̖ڂŊm���߂Ă݂Ă��������B:-)
+もう一度game.exeを実行すると……どうなるかは、自分の目で確かめてみてください。:-)
 
-! �����̃Q�[������낤
+! 自分のゲームを作ろう
 
-main.rb��ҏW����΁A�����̃I���W�i���̃Q�[������邱�Ƃ��ł��܂��B
+main.rbを編集すれば、自分のオリジナルのゲームを作ることができます。
 
-�X�N���v�g��Ruby�̕��@�ɏ]���ď����܂��B
-Ruby�̕��@�ɂ��Ă͈ȉ��̃T�C�g���Q�Ƃ��Ă��������B
-* Ruby���t�@�����X�}�j���A�� : http://www.ruby-lang.org/ja/man/
+スクリプトはRubyの文法に従って書きます。
+Rubyの文法については以下のサイトを参照してください。
+* Rubyリファレンスマニュアル : http://www.ruby-lang.org/ja/man/
 
-�܂��ARuby/SDL�̎g�����ɂ��Ă͈ȉ��̃T�C�g���Q�Ƃ��Ă��������B
+また、Ruby/SDLの使い方については以下のサイトを参照してください。
 * Ruby/SDL Reference Manual : http://www.kmc.gr.jp/~ohai/rubysdl_ref.html
 
-�摜�f�[�^�ɂ�bmp(�t���J���[����), png, gif, jpg ���g�p�ł��܂��B
-�����f�[�^�ɂ�wav, ogg, midi, mod(it, s3m, mod��)���g�p�ł��܂��B
-��RSKit�ł�mp3�͎g�p�ł��܂���Bogg���g�p���Ă��������B
+画像データにはbmp(フルカラー推奨), png, gif, jpg が使用できます。
+音声データにはwav, ogg, midi, mod(it, s3m, mod等)が使用できます。
+※RSKitではmp3は使用できません。oggを使用してください。
 
-�܂��A�ȉ���URL�ŃQ�[������ɖ𗧂�񂪌��J����Ă���c�����m��܂���B
+また、以下のURLでゲーム製作に役立つ情報が公開されている…かも知れません。
 * http://mono.kmc.gr.jp/~yhara/w/?RubySDLStarterKit
 
-! �ӎ�
+! 謝辞
 
-RSKit�͈ȉ��̃\�t�g�E�F�A�𗘗p���Ă��܂��B
+RSKitは以下のソフトウェアを利用しています。
 * Ruby : http://www.ruby-lang.org/
 * SDL(Simple DirectMedia Layer) : http://www.libsdl.org/
 * Ruby/SDL : http://www.kmc.gr.jp/~ohai/rubysdl.html
 * Exerb : http://exerb.sourceforge.jp/
 
-�܂��Asound/bom08.wav�͈ȉ��̃T�C�g�̂��̂𗘗p���Ă��܂��B
-* �U�E�}�b�`���C�J�@�Y : http://osabisi.sakura.ne.jp/m2/
+また、sound/bom08.wavは以下のサイトのものを利用しています。
+* ザ・マッチメイカァズ : http://osabisi.sakura.ne.jp/m2/
 
-��҂̕��X�Ɋ��ӂ��܂��B���肪�Ƃ��������܂��B
+作者の方々に感謝します。ありがとうございます。
 
 ! History
 
-1.2.0b(2007/1/4)   - *.so���ǂݍ��߂Ȃ������̂��C��
-1.2.0a(2006/12/25) - �ŏ��̃����[�X 
+1.2.0b(2007/1/4)   - *.soが読み込めなかったのを修正
+1.2.0a(2006/12/25) - 最初のリリース 
 
-! �A����
+! 連絡先
 
- yhara / ����}�C�R���N���u
+ yhara / 京大マイコンクラブ
   
  yhara(at)kmc.gr.jp
  http://mono.kmc.gr.jp/~yhara/
