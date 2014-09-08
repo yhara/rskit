@@ -7,7 +7,7 @@ require 'sdl'
 require 'lib/fpstimer.rb'
 require 'lib/input.rb'
 
-#キー定義
+# Key definition
 class Input
   define_key SDL::Key::ESCAPE, :exit
   define_key SDL::Key::LEFT, :left
@@ -19,22 +19,22 @@ end
 class Game
 
   def main
-    # 初期化
+    # Initialization
     SDL.init(SDL::INIT_VIDEO|SDL::INIT_AUDIO|SDL::INIT_JOYSTICK)
     SDL::Mixer.open
     SDL::TTF.init
 
-    # 画面の初期化
+    # Init screen
     if defined?(SDL::RELEASE_MODE)
-      # game.exeから起動したとき
+      # Invoked via game.exe
       SDL::Mouse.hide
       @screen = SDL.set_video_mode(640, 480, 16, SDL::HWSURFACE|SDL::DOUBLEBUF|SDL::FULLSCREEN)
     else
-      # debug.exeから起動したとき
+      # Invoked via debug.exe
       @screen = SDL.set_video_mode(640, 480, 16, SDL::SWSURFACE|SDL::DOUBLEBUF)
     end
 
-    # オブジェクトの生成
+    # Create objects
     $score = Score.new
 
     @input = Input.new
@@ -42,21 +42,21 @@ class Game
     @bgm = SDL::Mixer::Music.load("sound/famipop3.it")
     @player      = Player.new(240, 400-32)
     @items       = Items.new
-    @state = :title   #最初はタイトルから
+    @state = :title   # Show title screen first
 
-    # メインループ
+    # Main loop
     timer = FPSTimerLight.new
     timer.reset
     loop do  
-      @input.poll             #入力
-      break if @input[:exit]  #  ESCAPE押されたら終了
+      @input.poll             # Check input
+      break if @input[:exit]  #   Exit if ESCAPE is pressed
 
-      act                     #動作
-      render                  #描画
-      timer.wait_frame{ @screen.flip } #待つ
+      act                     # Move objects
+      render                  # Render objects
+      timer.wait_frame{ @screen.flip } # Wait
     end
 
-    #終了
+    # Finalize
     $score.save
   end
 
@@ -73,7 +73,7 @@ class Game
     end
   end
 
-  # タイトル (ENTERが押されたらREADY GOに)
+  # Title screen (press ENTER -> READY GO)
   def act_title
     @player.act(@input)
     if @input.ok
@@ -82,7 +82,7 @@ class Game
     end
   end
 
-  # READY GO (一定時間経ったらゲーム開始)
+  # READY GO (Start game after a while)
   def act_readygo
     @time += 1
 
@@ -92,7 +92,7 @@ class Game
     end
   end
 
-  # ゲーム中 (爆弾に当たったらGAME OVERに)
+  # Playing the game (GAME OVER if hit bomb)
   def act_playing
     @player.act(@input)
     crash = @items.act(@player)
@@ -104,7 +104,7 @@ class Game
     end
   end
 
-  # GAME OVER (一定時間経ったらタイトルに)
+  # GAME OVER (Show title after a while)
   def act_gameover
     @time += 1
 
@@ -116,18 +116,18 @@ class Game
   end
 
   def render
-    #背景の描画
+    # Render background
     @screen.fill_rect(0,0,  640,400, [128,255,255])
     @screen.fill_rect(0,400,640,180, [0,128,0])
 
-    #キャラクターの描画
+    # Render characters
     @player.render(@screen)
     @items.render(@screen)
 
-    #スコアの描画
+    # Render score
     @font.drawBlendedUTF8(@screen, "SCORE %05d  HIGH %05d" % [$score.score,$score.highscore], 0,0, 0,0,0) 
 
-    #メッセージの描画
+    # Render messages
     case @state
     when :title
       @font.drawBlendedUTF8(@screen,"THE APPLE CATCHER",0,210, 255,0,0)
@@ -150,25 +150,25 @@ class Player
   def initialize(x,y)
     @x, @y = x, y
     
-    #画像の読み込み
+    # Load image
     image = SDL::Surface.load("image/noschar.png")
     image.set_color_key(SDL::SRCCOLORKEY|SDL::RLEACCEL, [255,255,255])
-    #一番上の4マスを切りだして配列に入れる
+    # Extract four images from the top-most row
     @images = []
     4.times do |x|
       @images << image.copy_rect(32*x,0,32,32).display_format
     end
 
-    #アニメーション用のカウンタ
+    # Counter for character animation
     @img_ct = 0
   end
   attr_reader :x, :y
 
   def act(input)
-    #移動
+    # Control
     move(-8) if input.left
     move(+8) if input.right
-    #アニメーション
+    # Animation
     @img_ct += 1
     @img_ct = 0 if @img_ct >= 40
   end
@@ -185,18 +185,18 @@ class Player
 
 end
 
-#落下物
+# Falling items
 class Items
   Item = Struct.new(:type,:x,:y,:v)
 
   def initialize
-    #画像のロード
+    # Load image
     @img_apple = SDL::Surface.loadBMP("image/ringo.bmp")
     @img_apple.set_color_key(SDL::SRCCOLORKEY, [255,255,255])
     @img_bomb = SDL::Surface.loadBMP("image/bomb.bmp")
     @img_bomb.set_color_key(SDL::SRCCOLORKEY, [255,255,255])
 
-    #音声のロード
+    # Load sound
     @sound_get  = SDL::Mixer::Wave.load("sound/get.wav")
     @sound_bomb = SDL::Mixer::Wave.load("sound/bom08.wav")
 
@@ -207,7 +207,7 @@ class Items
     @items = []
   end
 
-  #リンゴの当たり判定
+  # Collision detection of apples
   def hit_apple?(apple, player)
     xdiff = (apple.x+38) - (player.x+16)
     ydiff = (apple.y+48) - (player.y+16)
@@ -216,7 +216,7 @@ class Items
     distance < (40+16)
   end
 
-  #爆弾の当たり判定
+  # Collision detection of bombs
   def hit_bomb?(bomb, player)
     xdiff = (bomb.x+36) - (player.x+16)
     ydiff = (bomb.y+54) - (player.y+16)
@@ -228,13 +228,13 @@ class Items
   def act(player)
     crash = false
 
-    #移動
+    # Move
     @items.each do |item|
       item.y += item.v
-      #item.x += item.v-8    #←隠しモード
+      #item.x += item.v-8    # <- secret mode :-)
     end
       
-    #当たり判定
+    # Collision detection
     @items.each do |item|
       case item.type
       when :apple
@@ -251,24 +251,24 @@ class Items
       end
     end
 
-    #消去
+    # Remove items gone out of screen
     @items.delete_if do |item|
       item.y > 480
     end
 
-    #生成
+    # Generate new items
     while @items.size < 5
       newx = rand(640) 
       type = (rand(100) < 80) ? :bomb : :apple
       @items << Item.new(type, newx, 0, rand(9)+4)
     end
 
-    #爆弾に当たったかどうかを返す
+    # Return if hit bomb
     crash
   end
 
   def render(screen)
-    #アイテムを一個ずつ描画する
+    # Render each item
     @items.each do |item|
       case item.type
       when :apple
@@ -284,7 +284,7 @@ class Score
   SCOREFILE = "score.dat"
 
   def initialize
-    #ハイスコアのロード(ファイルがあれば)
+    # Load highscore form file (if any)
     if File.exist?(SCOREFILE)
       @highscore = File.open(SCOREFILE,"rb"){|f| Marshal.load(f)}
     else
@@ -294,7 +294,7 @@ class Score
   end
   attr_reader :score, :highscore
 
-  #スコアのリセット(と、ハイスコアの更新)
+  # Reset score and update highscore
   def reset
     if @highscore < @score
       @highscore = @score
@@ -302,7 +302,7 @@ class Score
     @score = 0
   end
   
-  #ハイスコアのセーブ
+  # Save highscore
   def save
     data = @highscore
     File.open(SCOREFILE,"wb"){|f| Marshal.dump(data,f)}
@@ -313,6 +313,6 @@ class Score
   end
 end
 
-#実行！
+# Start this program
 Game.new.main
 
